@@ -315,9 +315,6 @@
         "generate": "Générer un rapport"
     },
     "serial": "Numéro de série",
-    "servermetrics": {
-        "tab": "Server Metrics"
-    },
     "show": "Afficher",
     "size": "Taille",
     "software": {

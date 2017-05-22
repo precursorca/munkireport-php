@@ -19,5 +19,6 @@
         "afp_users": "Utilisateurs AFP",
         "connected_users": "Partage - Utilisateurs connectés",
         "smb_users": "Utilisateurs SMB"
-    }
+    },
+    "tab": "Server Metrics"
 }

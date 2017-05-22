@@ -311,9 +311,6 @@
         "generate": "Report erzeugen"
     },
     "serial": "Seriennummer",
-    "servermetrics": {
-        "tab": "Server Statistik"
-    },
     "show": "Anzeigen",
     "size": "Größe",
     "software": {
