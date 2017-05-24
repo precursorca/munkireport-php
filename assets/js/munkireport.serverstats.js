@@ -25,13 +25,13 @@ drawServerPlots = function(hours) {
 		// Call update on all charts when #serverstats
 		// becomes active so nvd3 knows about the width
 		// (hidden tabs have no width)
-		if($(e.target).attr('href') == '#serverstats')
+		if($(e.target).attr('href') == '#serverstats-tab')
 		{
 			charts.forEach(function(callback) {
 				callback();
 			});
 		}
-	})
+	});
 
 
 	$.when(
