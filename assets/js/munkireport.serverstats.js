@@ -21,16 +21,13 @@ drawServerPlots = function(hours) {
 		byteFormat = function(d){ return siFormat(d) + 'B'},
 		networkFormat = function(d){ return siFormat(d) + 'B/s'};
 
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	$('a[href="#serverstats-tab"]').on('shown.bs.tab', function (e) {
 		// Call update on all charts when #serverstats
 		// becomes active so nvd3 knows about the width
 		// (hidden tabs have no width)
-		if($(e.target).attr('href') == '#serverstats-tab')
-		{
-			charts.forEach(function(callback) {
-				callback();
-			});
-		}
+		charts.forEach(function(callback) {
+			callback();
+		});
 	});
 
 
