@@ -3,6 +3,7 @@
 namespace munkireport\controller;
 
 use \Controller, \View;
+use Illuminate\Database\Query\JoinClause;
 use \Machine_model, \Reportdata_model, \Disk_report_model, \Warranty_model, \Localadmin_model, \Security_model;
 
 
@@ -39,49 +40,19 @@ class clients extends Controller
         $obj = new View();
 
         if (authorized_for_serial($serial_number)) {
-            $machine = new Machine_model;
-            new Reportdata_model;
-            new Disk_report_model;
-            new Warranty_model;
-            new Localadmin_model;
-            new Security_model;
-
             $db = $this->connectDB();
-            $results = $db::table('machine')->select([
-                'reportdata.console_user',
-                'reportdata.long_username',
-                'reportdata.remote_ip',
-                'reportdata.uptime',
-                'reportdata.reg_timestamp',
-                'reportdata.machine_group',
-                'reportdata.timestamp',
-                'security.gatekeeper',
-                'security.sip',
-                'security.ssh_users',
-                'security.ard_users',
-            ])
+            $results = $db::table('machine')->select()
                 ->leftJoin('reportdata', 'machine.serial_number', '=', 'reportdata.serial_number')
                 ->leftJoin('security', 'machine.serial_number', '=', 'security.serial_number')
                 ->leftJoin('warranty', 'machine.serial_number', '=', 'warranty.serial_number')
                 ->leftJoin('localadmin', 'machine.serial_number', '=', 'localadmin.serial_number')
-                ->leftJoin('diskreport', 'machine.serial_number', '=', 'diskreport.serial_number')
-                ->where('serial_number', '=', $serial_number);
+                ->leftJoin('diskreport', function ($join) {
+                    $join->on('machine.serial_number', '=', 'diskreport.serial_number')
+                        ->where('diskreport.mountpoint', '=', '/');
+                })
+                ->where('machine.serial_number', '=', $serial_number);
 
-            $sql = "SELECT m.*, r.console_user, r.long_username, r.remote_ip,
-                        r.uptime, r.reg_timestamp, r.machine_group, r.timestamp,
-			s.gatekeeper, s.sip, s.ssh_users, s.ard_users, s.firmwarepw, s.firewall_state, s.skel_state,
-			w.purchase_date, w.end_date, w.status, l.users, d.totalsize, d.freespace,
-                        d.smartstatus, d.encrypted
-                FROM machine m
-                LEFT JOIN reportdata r ON (m.serial_number = r.serial_number)
-                LEFT JOIN security s ON (m.serial_number = s.serial_number)
-                LEFT JOIN warranty w ON (m.serial_number = w.serial_number)
-                LEFT JOIN localadmin l ON (m.serial_number = l.serial_number)
-                LEFT JOIN diskreport d ON (m.serial_number = d.serial_number AND d.mountpoint = '/')
-                WHERE m.serial_number = ?
-                ";
-
-            $obj->view('json', array('msg' => $machine->query($sql, $serial_number)));
+            $obj->view('json', array('msg' => $results->get()));
         } else {
             $obj->view('json', array('msg' => array()));
         }
