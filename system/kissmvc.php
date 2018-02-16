@@ -116,6 +116,14 @@ class Model extends KISS_Model
 
     // Errors
     protected $errors = '';
+    
+    public function __construct($pkname = '', $tablename = '', $dbhfnname = 'getdbh', $quote_style = 'MYSQL', $compress_array = true)
+    {
+        $conn = conf('connection');
+        $quote_style = $conn['driver'] == 'pgsql' ? 'ANSI' : 'MYSQL';
+        parent::__construct($pkname, $tablename, $dbhfnname, $quote_style, $compress_array);
+    }
+
 
 
     public function save()

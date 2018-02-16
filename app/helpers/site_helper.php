@@ -3,7 +3,7 @@
 use munkireport\models\Machine_group, munkireport\lib\Modules;
 
 // Munkireport version (last number is number of commits)
-$GLOBALS['version'] = '3.0.3.3321';
+$GLOBALS['version'] = '3.0.3.3322';
 
 // Return version without commit count
 function get_version()
@@ -81,6 +81,10 @@ function getdbh()
 
                 case 'mysql':
                     $dsn = "mysql:host={$conn['host']};dbname={$conn['database']}";
+                    break;
+
+                case 'pgsql':
+                    $dsn = "pgsql:host={$conn['host']};dbname={$conn['database']}";
                     break;
 
                 default:
